@@ -1,0 +1,23 @@
+{
+  "name": "podstation-ng-reuse",
+  "description": "Reusable AngularJS services for podStation Podcast Player",
+  "main": "gulpfile.js",
+  "authors": [
+    "Guilherme Dellagustin"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "rss",
+    "feed",
+    "podcast"
+  ],
+  "homepage": "https://github.com/podStation/podStationNGReuse",
+  "ignore": [
+    "**/.*",
+    "src",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

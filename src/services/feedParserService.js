@@ -34,15 +34,14 @@ function parsePodcastFeed(feedContent) {
 	result.podcast.description = processMultiTagText(xml.find('rss > channel > description'));
 	result.podcast.link = xml.find('rss > channel > link').text();
 
-	result.podcast.pubDate = postProcessPubDate(xml.find('rss > channel > pubDate').text());
-	if(result.podcast.pubDate === '') {
-		result.podcast.pubDate = postProcessPubDate(xml.find('rss > channel > lastBuildDate').text());
-	}
+	result.podcast.pubDate = 
+	  postProcessPubDate(xml.find('rss > channel > pubDate').text()) ||
+	  postProcessPubDate(xml.find('rss > channel > lastBuildDate').text());
 
-	result.podcast.image = $(xml.find('rss > channel > image > url')[0]).text();
-	if(result.podcast.image === undefined || result.podcast.image === "") {
-		result.podcast.image = xml.find('rss > channel > image').attr('href');
-	}
+	result.podcast.image = 
+	  $(xml.find('rss > channel > image > url')[0]).text() ||
+	  xml.find('rss > channel > image').attr('href') ||
+	  xml.find('rss > channel > itunes\\:image').attr('href');
 
 	xml.find('rss > channel > item').each(function() {
 		var feedItem = $(this);

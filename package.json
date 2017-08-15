@@ -1,6 +1,6 @@
 {
   "name": "podstation-ng-reuse",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Reusable AngularJS services for podStation Podcast Player",
   "main": "gulpfile.js",
   "dependencies": {},

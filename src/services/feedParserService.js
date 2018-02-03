@@ -43,6 +43,8 @@ function parsePodcastFeed(feedContent) {
 	  xml.find('rss > channel > image').attr('href') ||
 	  xml.find('rss > channel > itunes\\:image').attr('href');
 
+	processSocial(xml.find('rss > channel'), result.podcast);
+
 	xml.find('rss > channel > item').each(function() {
 		var feedItem = $(this);
 		var episode = {};
@@ -62,6 +64,8 @@ function parsePodcastFeed(feedContent) {
 			length: enclosure.attr('length'),
 			type: enclosure.attr('type')
 		};
+
+		processSocial(feedItem, episode);
 
 		result.episodes.push(episode);
 	});
@@ -105,5 +109,63 @@ function parsePodcastFeed(feedContent) {
 		});
 
 		return text;
+	}
+
+	function processSocial(xmlItem, result) {
+		result.email = xmlItem.children('social\\:email').text();
+		result.email = result.email || xmlItem.children('itunes\\:email').text();
+		result.email = result.email || xmlItem.children('googleplay\\:email').text();
+
+		xmlItem.children('social\\:handle').each(function() {
+			const feedSocialHandle = $(this);
+			const socialHandle = {};
+
+			result.socialHandles = result.socialHandles || [];
+
+			socialHandle.handle = feedSocialHandle.text();
+			socialHandle.type = feedSocialHandle.attr('type');
+			socialHandle.url = feedSocialHandle.attr('url');
+			socialHandle.text = feedSocialHandle.attr('text');
+			result.socialHandles.push(socialHandle);
+		});
+
+		xmlItem.children('social\\:crowdfunding').each(function() {
+			const feedCrowdfunding = $(this);
+			const crowdfunding = {};
+
+			result.crowdfundings = result.crowdfundings || [];
+
+			crowdfunding.handle = feedCrowdfunding.text();
+			crowdfunding.type = feedCrowdfunding.attr('type');
+			crowdfunding.url = feedCrowdfunding.attr('url');
+			crowdfunding.text = feedCrowdfunding.attr('text');
+			result.crowdfundings.push(crowdfunding);
+		});
+
+		xmlItem.children('social\\:participant').each(function() {
+			const feedParticipant = $(this);
+			const participant = {};
+
+			result.participants = result.participants || [];
+
+			participant.name = feedParticipant.attr('name');
+			participant.id = feedParticipant.attr('id');
+			participant.permanent = feedParticipant.attr('permanent');
+
+			processSocial(feedParticipant, participant);
+
+			result.participants.push(participant);
+		});
+
+		xmlItem.children('social\\:participantReference').each(function() {
+			const feedParticipantReference = $(this);
+			const participantReference = {};
+
+			result.participantReferences = result.participantReferences || [];
+			
+			participantReference.id = feedParticipantReference.attr('id');
+
+			result.participantReferences.push(participantReference);
+		});
 	}
 }

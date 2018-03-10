@@ -116,6 +116,10 @@ function parsePodcastFeed(feedContent) {
 		result.email = result.email || xmlItem.children('itunes\\:email').text();
 		result.email = result.email || xmlItem.children('googleplay\\:email').text();
 
+		if(!result.email) {
+			delete result.email;
+		}
+
 		xmlItem.children('social\\:handle').each(function() {
 			const feedSocialHandle = $(this);
 			const socialHandle = {};
